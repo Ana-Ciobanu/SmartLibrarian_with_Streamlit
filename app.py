@@ -5,10 +5,16 @@ from rag_ingest_and_search import semantic_search
 from utils import get_summary_by_title
 from openai import OpenAI
 import json
+from better_profanity import profanity
 
 load_dotenv()
 IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL")
 TEXT_MODEL = os.getenv("OPENAI_TEXT_MODEL")
+
+profanity.load_censor_words()  # Loads default word list
+
+def contains_offensive_language(text):
+    return profanity.contains_profanity(text)
 
 def generate_book_image(book_title, book_summary):
     prompt = f"""
@@ -103,24 +109,27 @@ Call the get_summary_by_title tool to get the complete summary which you will di
     return response.output_text
 
 if user_query:
-    with st.spinner("Searching for books..."):
-        docs, metas = semantic_search(user_query)
-    st.subheader("Recommended Book:")
-    # Only show the top result for conversational response
-    if metas and docs:
-        meta = metas[0]
-        doc = docs[0]
-
-        with st.spinner("Getting AI recommendation..."):
-            response = chatgpt_response(user_query, meta['title'])
-
-        st.markdown(response)
-        # Automatically generate and display book image
-        book_theme = doc if doc else meta['title']
-        with st.spinner("Generating image..."):
-            img_url = generate_book_image(meta['title'], book_theme)
-        st.image(img_url, caption=f"Suggested cover or scene for '{meta['title']}'", use_container_width=True)
+    if contains_offensive_language(user_query):
+        st.warning("I'm here to help, but please avoid using inappropriate language.")
     else:
-        st.info("No matching books found.")
+        with st.spinner("Searching for books..."):
+            docs, metas = semantic_search(user_query)
+        st.subheader("Recommended Book:")
+        # Only show the top result for conversational response
+        if metas and docs:
+            meta = metas[0]
+            doc = docs[0]
+
+            with st.spinner("Getting AI recommendation..."):
+                response = chatgpt_response(user_query, meta['title'])
+
+            st.markdown(response)
+            # Automatically generate and display book image
+            book_theme = doc if doc else meta['title']
+            with st.spinner("Generating image..."):
+                img_url = generate_book_image(meta['title'], book_theme)
+            st.image(img_url, caption=f"Suggested cover or scene for '{meta['title']}'", use_container_width=True)
+        else:
+            st.info("No matching books found.")
 else:
     st.info("Type your interests above and press Enter.")
