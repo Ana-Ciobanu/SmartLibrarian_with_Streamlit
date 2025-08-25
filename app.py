@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import streamlit as st
 from rag_ingest_and_search import semantic_search
-from utils import get_summary_by_title, contains_offensive_language, generate_book_image, chatgpt_response
+from utils import contains_offensive_language, generate_book_image, chatgpt_response, text_to_speech, play_audio_autoplay
 from openai import OpenAI
 from better_profanity import profanity
 
@@ -49,6 +49,11 @@ if user_query:
                 st.session_state.last_title = meta['title']
 
             response = st.session_state.get("response")
+
+            if st.button("🔊 Listen to the recommendation"):
+                audio_file = text_to_speech(response)
+                st.audio(audio_file, format="audio/mp3")
+
             st.markdown(response)
 
             # Only generate image if not already cached for this title
