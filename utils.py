@@ -2,41 +2,11 @@ import json
 from better_profanity import profanity
 from gtts import gTTS
 import tempfile
-import streamlit as st
 
 profanity.load_censor_words()
 
 def contains_offensive_language(text):
     return profanity.contains_profanity(text)
-
-import base64
-
-# def play_audio_autoplay(file_path):
-#     with open(file_path, "rb") as audio_file:
-#         audio_bytes = audio_file.read()
-#         b64 = base64.b64encode(audio_bytes).decode()
-#         audio_html = f"""
-#         <audio autoplay>
-#             <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-#         </audio>
-#         """
-#         st.components.v1.html(audio_html, height=0)
-
-def play_audio_autoplay(file_path):
-    import base64
-
-    with open(file_path, "rb") as audio_file:
-        audio_bytes = audio_file.read()
-        b64 = base64.b64encode(audio_bytes).decode()
-
-    audio_html = f"""
-        <audio autoplay controls>
-            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-            Your browser does not support the audio element.
-        </audio>
-    """
-    st.components.v1.html(audio_html, height=60)
-
 
 def generate_book_image(book_title, book_summary, client, IMAGE_MODEL):
     prompt = f"""

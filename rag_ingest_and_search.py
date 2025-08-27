@@ -16,7 +16,7 @@ chroma = Chroma(
 )
 
 def load_summaries(file_path):
-    """Load book summaries from the txt file."""
+    # Load book summaries from the txt file.
     with open(file_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
     docs = []
@@ -38,7 +38,7 @@ def load_summaries(file_path):
     return docs
 
 def ingest_to_chromadb(docs):
-    """Ingest documents into ChromaDB vector store."""
+    # Ingest documents into ChromaDB vector store.
     global chroma
     documents = []
     for doc in docs:
@@ -46,8 +46,12 @@ def ingest_to_chromadb(docs):
     chroma = Chroma.from_documents(documents, embedding_function, persist_directory="./chroma_db", collection_name="book_summaries")
 
 def semantic_search(query, n_results=3):
-    """Semantic search for book summaries."""
+    # Semantic search for book summaries.
     results = chroma.similarity_search(query, k=n_results)
     docs = [r.page_content for r in results]
     metas = [r.metadata for r in results]
     return docs, metas
+
+if __name__ == "__main__":
+    docs = load_summaries("book_summaries.txt")
+    ingest_to_chromadb(docs)

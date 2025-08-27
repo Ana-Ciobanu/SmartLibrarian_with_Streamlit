@@ -32,7 +32,3 @@ Thumbs.db
 *.bak
 *.swp
 *.tmp
-
-# Ignore book summaries and generated files
-complete_book_summaries.json
-book_summaries.txt
