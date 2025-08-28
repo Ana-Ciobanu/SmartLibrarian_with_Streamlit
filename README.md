@@ -84,10 +84,11 @@ Make sure your OpenAI API key is set properly. Use `setx OPENAI_API_KEY "your-ke
 ## File Structure
 
 - `app.py` – Main Streamlit app.
-- `utils.py` – Utility functions for AI, image generation, speech, and profanity filtering.
+- `utils.py` – Utility functions for AI, image generation, text-to-speech, and profanity filtering.
 - `rag_ingest_and_search.py` – Semantic search and database ingestion.
 - `book_summaries.txt` – Source book summaries.
 - `complete_book_summaries.json` – Detailed book summaries.
+- `voice_input_component.py` - Speech-to-text functionality
 - `.env` – Environment variables for model names.
 - `requirements.txt` – Python dependencies.
 
