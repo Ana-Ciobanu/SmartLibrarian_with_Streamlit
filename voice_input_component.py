@@ -1,5 +1,6 @@
 import streamlit.components.v1 as components
 
+
 def voice_input():
     voice_html = """
     <style>

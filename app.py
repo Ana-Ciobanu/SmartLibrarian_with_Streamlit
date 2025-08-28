@@ -1,9 +1,13 @@
-
 import os
 from dotenv import load_dotenv
 import streamlit as st
 from rag_ingest_and_search import semantic_search
-from utils import contains_offensive_language, generate_book_image, chatgpt_response, text_to_speech
+from utils import (
+    contains_offensive_language,
+    generate_book_image,
+    chatgpt_response,
+    text_to_speech,
+)
 from openai import OpenAI
 from better_profanity import profanity
 from voice_input_component import voice_input
@@ -33,7 +37,7 @@ with st.container():
     final_query = st.text_input(
         "Paste recognized text or type your interests, themes, or keywords:",
         placeholder="e.g. a fantasy novel about dragons and friendship 🐉",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
 
 if final_query:
@@ -61,18 +65,23 @@ if final_query:
             doc = docs[0]
 
             # Only generate response if not already cached for this title
-            if st.session_state.get("last_title") != meta['title']:
+            if st.session_state.get("last_title") != meta["title"]:
                 with st.spinner("Getting AI recommendation..."):
-                    st.session_state.response = chatgpt_response(final_query, meta['title'], client, TEXT_MODEL)
-                st.session_state.last_title = meta['title']
+                    st.session_state.response = chatgpt_response(
+                        final_query, meta["title"], client, TEXT_MODEL
+                    )
+                st.session_state.last_title = meta["title"]
 
             response = st.session_state.get("response")
 
             # Save conversation only once
             if not st.session_state.conversation_saved and (
-                not st.session_state.messages or st.session_state.messages[-1].get("content") != final_query
+                not st.session_state.messages
+                or st.session_state.messages[-1].get("content") != final_query
             ):
-                st.session_state.messages.append({"role": "user", "content": final_query})
+                st.session_state.messages.append(
+                    {"role": "user", "content": final_query}
+                )
                 st.session_state.messages.append({"role": "bot", "content": response})
                 st.session_state.conversation_saved = True
 
@@ -84,12 +93,18 @@ if final_query:
 
             # Only generate image if not already cached for this title
             if st.session_state.img_url is None:
-                book_theme = doc if doc else meta['title']
+                book_theme = doc if doc else meta["title"]
                 with st.spinner("Generating image..."):
-                    st.session_state.img_url = generate_book_image(meta['title'], book_theme, client, IMAGE_MODEL)
+                    st.session_state.img_url = generate_book_image(
+                        meta["title"], book_theme, client, IMAGE_MODEL
+                    )
 
             if st.session_state.img_url:
-                st.image(st.session_state.img_url, caption=f"Suggested cover or scene for '{meta['title']}'", use_container_width=True)
+                st.image(
+                    st.session_state.img_url,
+                    caption=f"Suggested cover or scene for '{meta['title']}'",
+                    use_container_width=True,
+                )
             else:
                 st.info("Could not generate an image for this book.")
         else:
