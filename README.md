@@ -14,6 +14,7 @@ Smart Librarian is a Streamlit-powered web app that recommends books based on yo
 - **AI Recommendations:** Generates friendly, conversational book suggestions using OpenAI's GPT models.
 - **AI-Generated Images:** Visualizes book covers or scenes using DALL-E.
 - **Text-to-Speech:** Listen to the AI recommendation.
+- **Speech-to-Text Input:** Use your microphone to speak your book request. The app will recognize your speech and allow you to paste the recognized text for recommendations.
 - **Conversation History:** View your previous queries and responses.
 
 ## Technologies Used
